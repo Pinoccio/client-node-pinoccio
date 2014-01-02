@@ -20,7 +20,9 @@ test("test run bitlash.",function(t){
         console.log(data);
 
         t.end();
+        setTimeout(function(){
         bitlash.close();
+        },4000);
       });
     })
 
