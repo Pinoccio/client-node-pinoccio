@@ -89,8 +89,8 @@ module.exports = function(config){
       opts.headers = {'x-client-version':pkg.version};
 
       if(opts.method == 'GET'){
-        uri += '?'+data;
         data = qs.stringify(data);
+        uri += '?'+data;
       } else {
         data = JSON.stringify(data);
       }
@@ -104,6 +104,7 @@ module.exports = function(config){
           cb(err);
           cb = function(){};
         }).pipe(concat(function(data){
+
           //console.log(data.toString());
           var parsed = json(data)||{};
           cb(parsed.error,parsed.data,data);
@@ -112,12 +113,13 @@ module.exports = function(config){
 
       if(opts.method != 'GET') {
         req.write(data);
+        req.end();
       }
-      req.end();
 
     }
   };
 
+  api.session.token = config.token;
 
   return api;
 }

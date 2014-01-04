@@ -7,10 +7,8 @@ var conf = require('../lib/config')
 
 var commands = {
   "login":require('../lib/commands/login'),
-  "user":require('../lib/commands/user'),
-  "register":function(args,cb){
-
-  },
+  "who":require('../lib/commands/who'),
+  "register":require('../lib/commands/register'),
   "provision":function(args,cb){
 
   },
@@ -53,7 +51,8 @@ conf(function(err,config){
     if(command === 'login' || command === 'register' || command == 'logout') {
       if(data) {
         config.token = data.token
-        conf.save(config,function(err){
+        console.log(data.token)
+        conf.save(function(err){
           if(err) console.error('error',command,'config.save',err+'');
         });
       }
@@ -61,10 +60,10 @@ conf(function(err,config){
 
     if(err) {
       console.error(err);
-    } 
-    //else if(data) {
-    //  console.log(data);
-    //}
+    } else {
+      console.log('OK');
+      process.exit(0);
+    }
   })
 
 });
