@@ -71,7 +71,7 @@ module.exports = function(config){
     */
     rest:function(method,uri,data,cb){
 
-      console.log('rest',arguments);
+      //console.log('rest',arguments);
 
       if(typeof data === 'function'){
         cb = data;
@@ -104,9 +104,9 @@ module.exports = function(config){
           cb(err);
           cb = function(){};
         }).pipe(concat(function(data){
-          console.log(data.toString());
-          var parsed = json(data);
-          cb(false,parsed,data);
+          //console.log(data.toString());
+          var parsed = json(data)||{};
+          cb(parsed.error,parsed.data,data);
         }))
       });
 

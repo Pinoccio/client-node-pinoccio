@@ -1,8 +1,4 @@
 #!/usr/bin/env node
-/*
-
-*/
-
 
 var pinoccio = require('../');
 var serial = require('../lib/serial');
@@ -10,19 +6,8 @@ var argv = require('optimist').argv;
 var conf = require('../lib/config')
 
 var commands = {
-  "login":function(args,cb){
-    // use:
-    var email = args.e||args.email||args.u||args.user||args.username;
-    var password = args.p|| args.pass||args.password;
-
-    if(!email || !password){
-      console.log('emnail and password required.')
-      console.log(' -e -email')
-      console.log(' -p -pass')  
-      cb()
-    }
-
-  },
+  "login":require('../lib/commands/login'),
+  "user":require('../lib/commands/user'),
   "register":function(args,cb){
 
   },
@@ -30,6 +15,9 @@ var commands = {
 
   },
   "rest":function(args,cb){
+
+  },
+  "stream":function(args,cb){
 
   },
   "serial":function(args,cb){
@@ -40,6 +28,8 @@ var commands = {
 var commandList = Object.keys(commands).join(',');
 
 conf(function(err,config){
+  var api = pinoccio(config);
+
   if(err) {
     console.log('error loading config! ',err);
   }
@@ -48,51 +38,36 @@ conf(function(err,config){
     exitmsg("missing command. please specify a command first. available commands are "+Object.keys(commands).join(','));
   }
 
-  var command = argv._.trim().toLowerCase();
+  var command = ((argv._||[])[0]||'').trim().toLowerCase();
 
-  console.log(argv);
   if(!commands[command]) {
     exitmsg("unknown command. available commands are "+Object.keys(commands).join(','));
   }
 
+  if(!commands[command].public && !conf.token) { 
+    exitmsg("you must login or register first. try 'pinoccio register' ");
+  }
 
-  if(command === 'login' || command === 'register') {
-    commands[command](argv,function(err,data){
+  commands[command](argv,api,config,function(err,data){
+
+    if(command === 'login' || command === 'register' || command == 'logout') {
       if(data) {
         config.token = data.token
         conf.save(config,function(err){
           if(err) console.error('error',command,'config.save',err+'');
-          else console.log('logged in');
-          process.exit();
         });
-
-      } else console.error('error',command,err+'');
-    })
-  } else if(command != 'serial') {
-    // required token
-    if(!conf.token) {
-      exitmsg("you must login or register first. try 'pinoccio register' ");
+      }
     }
 
-    commands[command](argv,function(err,data){
-      if(err) console.error('error',command,err+'');
-      else console.log(data);
-    }); 
+    if(err) {
+      console.error(err);
+    } 
+    //else if(data) {
+    //  console.log(data);
+    //}
+  })
 
-  } else {
-    // run serial.
-    console.log('TODO');
-  }
-
-  
-
-})
-
-function command(){
-
-}
-
-
+});
 
 function exitmsg(msg){
   console.error(msg);

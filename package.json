@@ -6,6 +6,9 @@
   "scripts": {
     "test": "tape test/*.js"
   },
+  "bin": {
+    "pinoccio": "./bin/pinoccio.js"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:Pinoccio/node-pinoccio"
@@ -33,7 +36,9 @@
     "binary-split": "~0.1.1",
     "through": "~2.3.4",
     "buffer-indexof": "0.0.1",
-    "optimist": "~0.6.0"
+    "optimist": "~0.6.0",
+    "ini": "~1.1.0",
+    "colors": "~0.6.2"
   },
   "devDependencies": {
     "tape": "~2.3.2",
