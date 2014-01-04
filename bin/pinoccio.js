@@ -9,18 +9,7 @@ var commands = {
   "login":require('../lib/commands/login'),
   "who":require('../lib/commands/who'),
   "register":require('../lib/commands/register'),
-  "provision":function(args,cb){
-
-  },
-  "rest":function(args,cb){
-
-  },
-  "stream":function(args,cb){
-
-  },
-  "serial":function(args,cb){
-     
-  }
+  "rest":require('../lib/commands/rest')
 }
 
 var commandList = Object.keys(commands).join(',');
@@ -42,7 +31,7 @@ conf(function(err,config){
     exitmsg("unknown command. available commands are "+Object.keys(commands).join(','));
   }
 
-  if(!commands[command].public && !conf.token) { 
+  if(!commands[command].public && !config.token) { 
     exitmsg("you must login or register first. try 'pinoccio register' ");
   }
 

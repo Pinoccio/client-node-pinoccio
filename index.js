@@ -100,6 +100,7 @@ module.exports = function(config){
       }
 
       var req =  hyperquest(uri,opts,function(err,res){
+        if(err) return cb(err);
         res.on('error',function(err){
           cb(err);
           cb = function(){};
