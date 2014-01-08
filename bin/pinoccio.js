@@ -9,7 +9,15 @@ var commands = {
   "login":require('../lib/commands/login'),
   "who":require('../lib/commands/who'),
   "register":require('../lib/commands/register'),
-  "rest":require('../lib/commands/rest')
+  "rest":require('../lib/commands/rest'),
+  "config":require('../lib/commands/config')
+  //"provision":<-- add any serial connected scouts to troops
+  // are you a lead scout?
+  // do you have a token?
+  //    no
+  //      if scout list troops and add to troop
+  //    yes
+  //      
 }
 
 var commandList = Object.keys(commands).join(',');
@@ -40,7 +48,6 @@ conf(function(err,config){
     if(command === 'login' || command === 'register' || command == 'logout') {
       if(data) {
         config.token = data.token
-        console.log(data.token)
         conf.save(function(err){
           if(err) console.error('error',command,'config.save',err+'');
         });
@@ -50,8 +57,8 @@ conf(function(err,config){
     if(err) {
       console.error(err);
     } else {
-      console.log('OK');
-      process.exit(0);
+      //console.log('OK');
+      //process.exit(0);
     }
   })
 

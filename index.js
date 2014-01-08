@@ -92,6 +92,7 @@ module.exports = function(config){
         data = qs.stringify(data);
         uri += '?'+data;
       } else {
+        if(data.token) uri += '?token='+data.token;
         data = JSON.stringify(data);
       }
 
@@ -99,13 +100,15 @@ module.exports = function(config){
         opts.headers['content-length'] = data.length;
       }
 
+
+      //console.log(uri,opts);
+
       var req =  hyperquest(uri,opts,function(err,res){
         if(err) return cb(err);
         res.on('error',function(err){
           cb(err);
           cb = function(){};
         }).pipe(concat(function(data){
-
           //console.log(data.toString());
           var parsed = json(data)||{};
           cb(parsed.error,parsed.data,data);
@@ -113,6 +116,8 @@ module.exports = function(config){
       });
 
       if(opts.method != 'GET') {
+
+        //console.log(data);
         req.write(data);
         req.end();
       }
