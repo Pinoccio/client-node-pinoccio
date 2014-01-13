@@ -78,7 +78,7 @@ module.exports = function(config){
         data = {};
       }
 
-      var uri = (config.api||'http://api.pinocc.io:8002')+path.join('/v1',uri);
+      var uri = (config.api||'http://api.pinocc.io:8002')+path.join('/v1',''+uri);
 
       var data = data||{};
       if(this.session.token) data.token = this.session.token;
@@ -116,7 +116,6 @@ module.exports = function(config){
       });
 
       if(opts.method != 'GET') {
-
         //console.log(data);
         req.write(data);
         req.end();
