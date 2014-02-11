@@ -78,7 +78,7 @@ module.exports = function(config){
         data = {};
       }
 
-      var uri = (config.api||'http://api.pinocc.io:8002')+path.join('/v1',''+uri);
+      var uri = (config.api||'https://api.pinocc.io')+path.join('/v1',''+uri);
 
       var data = data||{};
       if(this.session.token) data.token = this.session.token;
@@ -88,7 +88,7 @@ module.exports = function(config){
       opts.method = (method||"GET").toUpperCase();
       opts.headers = {'x-client-version':pkg.version};
 
-      if(opts.method == 'GET'){
+      if(opts.method == 'GET' || opts.method == 'DELETE'){
         data = qs.stringify(data);
         uri += '?'+data;
       } else {
@@ -96,7 +96,7 @@ module.exports = function(config){
         data = JSON.stringify(data);
       }
 
-      if(opts.method != 'GET') {
+      if(opts.method != 'GET' && opts.methos != 'DELETE') {
         opts.headers['content-length'] = data.length;
       }
 

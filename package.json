@@ -4,7 +4,8 @@
   "description": "pinoccio api client. http://pinocc.io",
   "main": "index.js",
   "scripts": {
-    "test": "tape test/*.js"
+    "test": "tape test/*.js",
+    "prepublish": "browserify browser.js -o browser.cmp.js"
   },
   "bin": {
     "pinoccio": "./bin/pinoccio.js"
@@ -38,7 +39,11 @@
     "buffer-indexof": "0.0.1",
     "optimist": "~0.6.0",
     "ini": "~1.1.0",
-    "colors": "~0.6.2"
+    "colors": "~0.6.2",
+    "rpc-stream": "~1.0.5",
+    "mux-demux": "~3.7.8",
+    "reconnect": "~2.0.0",
+    "cookie": "~0.1.0"
   },
   "devDependencies": {
     "tape": "~2.3.2",
