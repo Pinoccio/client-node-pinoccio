@@ -35,6 +35,8 @@ test("can connect",function(t){
       this.queue(data);
     })).pipe(con);
 
+    next.go();
+
   },function(err,srv){
     t.ok(!err,'should not have error '+err);
     
@@ -54,15 +56,25 @@ test("can connect",function(t){
       t.end();
       // cleanup net cons.
       server.close();
+      if(_con) _con.end();
     });
 
     stop = true;
-    setImmediate(function(){
+    next(function(){
       _con.end();
     });
   });
 
 });
+
+var q = [];
+function next(cb){
+  q.push(cb);
+}
+next.go = function(){
+ q.shift()(); 
+}
+
 
 function _server(connection,cb){
   var server = net.createServer(function(con){
