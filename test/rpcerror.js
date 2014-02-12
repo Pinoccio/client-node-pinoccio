@@ -1,9 +1,10 @@
 var test = require('tape');
 var net = require('net');
 var connection = require('../lib/connection');
+
+// server side.
 var mdm = require('mux-demux');
 var rpc = require('rpc-stream');
-var reconnect = require('reconnect');
 var through = require('through');
 
 
@@ -25,9 +26,7 @@ test("can connect",function(t){
     });
 
     con.on('error',function(e){
-
       console.log('con error> ',e);
-
     }).pipe(m).on('error',function(){
       t.fail("should not get mdm error");
     }).pipe(through(function(data){
@@ -49,7 +48,7 @@ test("can connect",function(t){
 
       console.log('rest called back.',err,result);
 
-      t.equals(err.code,"E_SERROR",'should have stream error calling rest.');
+      t.equals(err.code,"E_MDM",'should have stream error calling rest.');
 
       // done.
       t.end();
@@ -62,7 +61,6 @@ test("can connect",function(t){
       _con.destroy();
     });
   });
-
 });
 
 function _server(connection,cb){
