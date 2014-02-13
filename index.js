@@ -39,36 +39,6 @@ module.exports = function(config){
         cb(false,data);
       })
     },
-    /* 
-      im mid refactor on this. 
-      rest should not be tangled with serial so i can browserify.
-
-      see lib/serial and lib/bitlassh*
-
-    // put this lead scout in a new troop
-    provision:function(com,cb){
-      var z = this;
-      z.serialConnect(com,function(err,con){
-        if(err) return cb("could not open serial connection to "+com);
-        // get token
-        var done = function(err,data){
-          con.close();
-          cb(err,data);
-        }
-
-        z.rest('post','/account/token',function(err,data){
-          if(err) return done(err);
-           
-        })
-      });
-    },
-    // put this scout in an existing troop.
-    associate:function(com,account,troop,cb){
-      // get token
-      // get mesh id
-      // check to see if its already
-    },
-    */
     rest:function(method,uri,data,cb){
 
       //console.log('rest',arguments);
@@ -99,7 +69,6 @@ module.exports = function(config){
       if(opts.method != 'GET' && opts.methos != 'DELETE') {
         opts.headers['content-length'] = data.length;
       }
-
 
       //console.log(uri,opts);
 
