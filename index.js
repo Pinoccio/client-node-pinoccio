@@ -8,6 +8,9 @@ var json = require('./lib/json');
 var pkg = require('./package.json')
 
 
+var apibase = require('./lib/api');
+
+
 module.exports = function(config){
 
   var config = config||{};
@@ -52,7 +55,6 @@ module.exports = function(config){
 
       var data = data||{};
       if(this.session.token) data.token = this.session.token;
-
 
       var opts = {};
       opts.method = (method||"GET").toUpperCase();
