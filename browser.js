@@ -75,8 +75,8 @@ module.exports = window.pinoccioAPI = function(opts){
   };
 
   // start is optional. you will not get state events for those that have occured before start.
-  api.sync = function(account,start){
-    return a.sync(account,start);
+  api.sync = function(start){
+    return a.sync(api.token,start);
   };
 
   // request some or all stats by account.
