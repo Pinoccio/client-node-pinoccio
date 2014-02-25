@@ -18,7 +18,7 @@ module.exports = function(config){
   var api = {
     session:config.session||{},
     login:function(email,password,cb){
-      this.rest('post','/login',{email:email,password:password},function(err,data){
+      this.rest('post','/v1/login',{email:email,password:password},function(err,data){
         if(err) return cb(err);
         this.session = data;
         cb(false,data);
@@ -29,14 +29,14 @@ module.exports = function(config){
         cb(false,false);
       })
 
-      this.rest('post','/logout',function(err,data){
+      this.rest('post','/v1/logout',function(err,data){
         this.session = config.session = {};
         cb(err,data);
       })
     },
     register:function(data,cb){
       // you should send email,password, firstname, lastname, username
-      this.rest('post','/register',data,function(err,data){
+      this.rest('post','/v1/register',data,function(err,data){
         if(err) return cb(err);
         this.session = data;
         cb(false,data);
@@ -51,7 +51,7 @@ module.exports = function(config){
         data = {};
       }
 
-      var uri = (config.api||'https://api.pinocc.io')+path.join('/v1',''+uri);
+      var uri = (config.api||'https://api.pinocc.io')+path.join('/',''+uri);
 
       var data = data||{};
       if(this.session.token) data.token = this.session.token;
