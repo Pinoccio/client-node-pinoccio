@@ -56,7 +56,7 @@ conf(function(err,config){
 
     if(err) {
       console.error(err);
-    } else {
+    } else if(data) {
       //console.log('OK');
       //process.exit(0);
     }

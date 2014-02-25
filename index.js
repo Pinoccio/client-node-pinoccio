@@ -76,14 +76,22 @@ module.exports = function(config){
 
       var req =  hyperquest(uri,opts,function(err,res){
         if(err) return cb(err);
+
+
         res.on('error',function(err){
           cb(err);
           cb = function(){};
-        }).pipe(concat(function(data){
-          //console.log(data.toString());
-          var parsed = json(data)||{};
-          cb(parsed.error,parsed.data,data);
-        }))
+        })
+
+        if(res.headers['x-stream']) {
+          cb(false,res);// return response stream.
+        } else {
+          res.pipe(concat(function(data){
+            //console.log(data.toString());
+            var parsed = json(data)||{};
+            cb(parsed.error,parsed.data,data);
+          }))
+        }
       });
 
       if(opts.method != 'GET') {

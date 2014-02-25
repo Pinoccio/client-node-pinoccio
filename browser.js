@@ -84,7 +84,7 @@ module.exports = window.pinoccioAPI = function(opts){
   // if multiple reports are provided they
   api.stats = function(obj){
     //
-    return a.stats(obj);
+    return a.stats(api.token,obj);
   }
 
   return api;
