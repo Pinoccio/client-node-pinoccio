@@ -80,11 +80,19 @@ module.exports = window.pinoccioAPI = function(opts){
   };
 
   // request some or all stats by account.
-  // stats are defined as a time series of reports
+  // stats are a time series of report data
   // if multiple reports are provided they
   api.stats = function(obj){
     //
     return a.stats(api.token,obj);
+  }
+
+  // get the raw events stream.
+  // to subscribe to a troops raw events you must either execute a command on a scout in that troop or watch the troop
+  // api.rest({url:"/v1/{troopid}",method:"watch"},console.log.bind(console))
+  api.events = function(){
+    //
+    return a.events(api.token);
   }
 
   return api;
