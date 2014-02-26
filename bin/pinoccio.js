@@ -10,7 +10,8 @@ var commands = {
   "who":require('../lib/commands/who'),
   "register":require('../lib/commands/register'),
   "rest":require('../lib/commands/rest'),
-  "config":require('../lib/commands/config')
+  "config":require('../lib/commands/config'),
+  "serial":require('../lib/commands/serial'),
   //"provision":<-- add any serial connected scouts to troops
   // are you a lead scout?
   // do you have a token?
