@@ -3,6 +3,7 @@
   "version": "0.0.2",
   "description": "pinoccio api client. http://pinocc.io",
   "main": "index.js",
+  "browser":"browser.js",
   "scripts": {
     "test": "tape test/*.js",
     "build": "browserify browser.js -o pinoccio-api.js",
