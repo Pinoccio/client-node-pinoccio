@@ -1,4 +1,4 @@
-var reconnect = require("reconnect/engine.io");
+var reconnect = require("./lib/reconnect-enginefork");
 var engineOptions = require('engine.io-options-from-url');
 var through = require('through');
 var browserutil = require('./lib/browserutil');

@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "pinoccio api client. http://pinocc.io",
   "main": "index.js",
-  "browser":"browser.js",
+  "browser": "browser.js",
   "scripts": {
     "test": "tape test/*.js",
     "build": "browserify browser.js -o pinoccio-api.js",
@@ -48,7 +48,9 @@
     "cookie": "~0.1.0",
     "engine.io-options-from-url": "0.0.3",
     "repipe": "0.0.0",
-    "backoff": "~2.3.0"
+    "backoff": "~2.3.0",
+    "reconnect-core": "0.0.1",
+    "engine.io-stream":"git+ssh://git@github.com:soldair/engine.io-stream.git#0.4.3-soldair"
   },
   "devDependencies": {
     "tape": "~2.3.2",
