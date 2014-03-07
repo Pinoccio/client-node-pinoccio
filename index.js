@@ -68,7 +68,7 @@ module.exports = function(config){
         data = JSON.stringify(data);
       }
 
-      if(opts.method != 'GET' && opts.methos != 'DELETE') {
+      if(opts.method != 'GET' && opts.method != 'DELETE') {
         opts.headers['content-length'] = data.length;
       }
 
@@ -94,7 +94,7 @@ module.exports = function(config){
         }
       });
 
-      if(opts.method != 'GET') {
+      if(opts.method != 'GET' && opts.method != 'DELETE') {
         //console.log(data);
         req.write(data);
         req.end();
