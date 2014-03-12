@@ -7,6 +7,7 @@ var conf = require('../lib/config')
 
 var commands = {
   "login":require('../lib/commands/login'),
+  "logout":require('../lib/commands/logout'),
   "who":require('../lib/commands/who'),
   "register":require('../lib/commands/register'),
   "rest":require('../lib/commands/rest'),
