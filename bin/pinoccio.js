@@ -13,7 +13,8 @@ var commands = {
   "rest":require('../lib/commands/rest'),
   "config":require('../lib/commands/config'),
   "serial":require('../lib/commands/serial'),
-  //"provision":<-- add any serial connected scouts to troops
+  "provision":require('../lib/commands/provision')
+  //<-- add any serial connected scouts to troops
   // are you a lead scout?
   // do you have a token?
   //    no
