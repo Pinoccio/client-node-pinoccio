@@ -1,5 +1,4 @@
 var reconnect = require("reconnect-shoe");
-//var engineOptions = require('engine.io-options-from-url');
 var through = require('through');
 var browserutil = require('./lib/browserutil');
 var apibase = require('./lib/api.js')
