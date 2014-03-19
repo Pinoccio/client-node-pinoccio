@@ -4,6 +4,7 @@ var pinoccio = require('../');
 var serial = require('../lib/serial');
 var argv = require('optimist').argv;
 var conf = require('../lib/config')
+var loady = require('../lib/loady');
 
 var commands = {
   "login":require('../lib/commands/login'),
@@ -13,7 +14,7 @@ var commands = {
   "rest":require('../lib/commands/rest'),
   "config":require('../lib/commands/config'),
   "serial":require('../lib/commands/serial'),
-  "provision":require('../lib/commands/provision')
+  //"provision":require('../lib/commands/provision') //<-- not ready yet
   //<-- add any serial connected scouts to troops
   // are you a lead scout?
   // do you have a token?
@@ -73,4 +74,8 @@ function exitmsg(msg){
 }
 
 
-
+process.on('exit',function(){
+  loady.restore();
+}).on('SIGINT',function(){
+  if(!loady.active) process.exit();
+})

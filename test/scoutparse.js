@@ -36,3 +36,19 @@ test("can parse wifi command AT&V",function(t){
 });
 
 
+var wifilist = "BSSID              SSID                     Channel  Type  RSSI Security\n"
++" 00:1a:dd:be:29:e1, MCH-1749                        , 01,  INFRA , -62 , WPA2-PERSONAL\n"
++" 14:7d:c5:20:66:c8, rebelious bluejay               , 06,  INFRA , -61 , WPA2-PERSONAL\n"
++" 04:a1:51:a5:10:c2, NETGEAR10                       , 11,  INFRA , -65 , WPA2-PERSONAL\n"
++"No.Of AP Found:3\n"
+
+test("can parse wifi list",function(t){
+  var res = scoutparse['wifi.list'](wifilist);
+
+
+  console.log(res);
+  t.ok(res,"should have response from parse");
+  t.ok(res['rebelious bluejay'],'should have found ssids');
+  t.end();
+})
+

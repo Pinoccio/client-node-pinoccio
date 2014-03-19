@@ -1,5 +1,5 @@
-var reconnect = require("reconnect/engine.io");
-var engineOptions = require('engine.io-options-from-url');
+var reconnect = require("reconnect-shoe");
+//var engineOptions = require('engine.io-options-from-url');
 var through = require('through');
 var browserutil = require('./lib/browserutil');
 var apibase = require('./lib/api.js')
@@ -20,7 +20,7 @@ module.exports = window.pinoccioAPI = function(opts){
   api.account = false;
 
 
-  var recon = reconnect().connect(engineOptions(api.server+'/engine'));
+  var recon = reconnect().connect(api.server+'/shoe');//engineOptions(api.server+'/engine'));
   var a = apibase(opts,recon);
 
   api.log = function(){
