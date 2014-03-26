@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/pinoccio/client-node-pinoccio.png)](http://travis-ci.org/pinoccio/client-node-pinoccio)
+[![Build Status](https://secure.travis-ci.org/Pinoccio/client-node-pinoccio.png)](http://travis-ci.org/Pinoccio/client-node-pinoccio)
 
 pinoccio
 =============
