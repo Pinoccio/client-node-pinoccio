@@ -22,9 +22,13 @@ module.exports = window.pinoccioAPI = function(opts){
   var recon = reconnect().connect(api.server+'/shoe');//engineOptions(api.server+'/engine'));
   var a = apibase(opts,recon);
 
+  api._base = a;
+
   api.log = function(){
-    console.log.apply(console,arguments);
+    //console.log.apply(console,arguments);
   };
+
+  
 
   api.login = function(email,pass,cb){
     api.rest({url:"/v1/login",method:"post",data:{email:email,password:pass}},function(err,data){
@@ -74,8 +78,8 @@ module.exports = window.pinoccioAPI = function(opts){
   };
 
   // start is optional. you will not get state events for those that have occured before start.
-  api.sync = function(start){
-    return a.sync(api.token,start);
+  api.sync = function(options){
+    return a.sync(api.token,options);
   };
 
   // request some or all stats by account.
