@@ -19,7 +19,7 @@ module.exports = window.pinoccioAPI = function(opts){
   api.account = false;
 
 
-  var recon = reconnect().connect(api.server+'/shoe');//engineOptions(api.server+'/engine'));
+  var recon = reconnect().connect(api.server+'/shoe');
   var a = apibase(opts,recon);
 
   api._base = a;
