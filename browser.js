@@ -5,6 +5,10 @@ var apibase = require('./lib/api.js')
 
 module.exports = window.pinoccioAPI = function(opts){
 
+  if(typeof opts === 'string') {
+    opts = {token:opts};
+  }
+
   opts = opts||{};
   var api = through();
   var undef;
@@ -14,7 +18,7 @@ module.exports = window.pinoccioAPI = function(opts){
 
   opts.cookie = opts.cookie||'pinoccio_id';
 
-  api.token = browserutil.getCookie(opts.cookie); 
+  api.token = opts.token||browserutil.getCookie(opts.cookie); 
   api.server = opts.server||opts.api||browserutil.findAPIScript()||"https://api.pinocc.io";
   api.account = false;
 
@@ -27,8 +31,6 @@ module.exports = window.pinoccioAPI = function(opts){
   api.log = function(){
     //console.log.apply(console,arguments);
   };
-
-  
 
   api.login = function(email,pass,cb){
     api.rest({url:"/v1/login",method:"post",data:{email:email,password:pass}},function(err,data){
