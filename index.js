@@ -5,11 +5,10 @@ var hyperquest = require('hyperquest');
 var xtend = require('xtend');
 var concat = require('concat-stream');
 var json = require('./lib/json');
-var pkg = require('./package.json')
-
-
-var apibase = require('./lib/api');
-
+var pkg = require('./package.json');
+var through = require('through');
+var repipe = require('repipe');
+var split = require('split');
 
 module.exports = function(config){
 
@@ -48,6 +47,15 @@ module.exports = function(config){
       })
     },
     rest:function(method,uri,data,cb){
+      // support the same rest style as browser.
+      // opts,cb
+      if(typeof method == 'object' && method){
+
+        cb = uri;
+        uri = method.url
+        data = method.data
+        method = method.method || 'GET'
+      }
 
       //console.log('rest',arguments);
 
@@ -104,7 +112,54 @@ module.exports = function(config){
         req.write(data);
         req.end();
       }
+    },
+    sync:function(opts){
+      var s = through(function(data){
+        try{
+          this.queue(JSON.parse(data));
+        } catch(e) {
+          this.emit('error',e);
+        }
+      });
+      
+      this.rest({url:"/v1/sync",data:opts},function(err,_s){
+        if(err) return s.emit('error',err);
+        if(!_s) return s.emit('error',new Error('no stream returned'));
+        _s.on('error',function(error){
+          s.emit('error',error);
+        })
+        _s.pipe(split()).pipe(s);
 
+        s.on('end',function(){
+          _s.socket.end();
+        })
+      });
+
+      return s;
+    },
+    stats:function(opts){
+
+      var s = through(function(data){
+        try{
+          this.queue(JSON.parse(data));
+        } catch(e) {
+          this.emit('error',e);
+        }
+      });
+ 
+      this.rest({url:"/v1/stats",data:opts},function(err,_s){
+        if(err) return s.emit('error',err);
+        if(!_s) return s.emit('error',new Error('no stream returned'));
+        _s.on('error',function(error){
+          s.emit('error',error);
+        })
+        _s.pipe(split()),pipe(s);
+        s.on('end',function(){
+          _s.socket.end();
+        })
+      })
+
+      return s;
     }
   };
 
