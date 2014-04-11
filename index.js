@@ -15,6 +15,11 @@ module.exports = function(config){
 
   var config = config||{};
 
+  // token was passed directly.
+  if(typeof config == 'string'){
+    config = {session:{token:config}};
+  }
+
   var api = {
     session:config.session||{},
     login:function(email,password,cb){
