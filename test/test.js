@@ -15,3 +15,13 @@ test("can register",function(t){
   })
 
 })
+
+test("can pass token as config",function(t){
+  var a = api("hi");
+
+  t.equals(a.session.token,'hi');
+  t.end();
+
+});
+
+

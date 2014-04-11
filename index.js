@@ -17,7 +17,7 @@ module.exports = function(config){
 
   // token was passed directly.
   if(typeof config == 'string'){
-    config = {session:{token:config}};
+    config = {token:config};
   }
 
   var api = {
