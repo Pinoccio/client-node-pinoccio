@@ -10,6 +10,7 @@ var commands = {
   "login":require('../lib/commands/login'),
   "logout":require('../lib/commands/logout'),
   "who":require('../lib/commands/who'),
+  "token":require('../lib/commands/token'),
   "register":require('../lib/commands/register'),
   "rest":require('../lib/commands/rest'),
   "config":require('../lib/commands/config'),
