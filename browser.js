@@ -72,7 +72,8 @@ module.exports = window.pinoccioAPI = function(opts){
 
     if(api.token){
       if(!obj.data) obj.data = {};
-      obj.data.token = api.token;
+      // allow override token to be specified in options (token managment)
+      if(!obj.data.token) obj.data.token = api.token;
     }
 
     if(!obj.method) obj.method = 'get';

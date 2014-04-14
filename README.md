@@ -10,7 +10,7 @@ Pinoccio Node.js, CLI and Browser api!
 var pinoccio = require('pinoccio'); // works in browserify and server side
 
 // create an api instance with default options
-var api = pinoccio({token:logintoken});// in the browser the token may be read from a pinoccio_id cookie,
+var api = pinoccio(logintoken);// in the browser the token may be read from a pinoccio_id cookie,
 
 api.rest({url:"/v1/troops"},function(error,data){
   if(error) return console.log('oh no. i got an error getting my troops!',error);
@@ -22,6 +22,7 @@ api.rest({url:"/v1/troops"},function(error,data){
 #### cli
 
 ```sh
+pinoccio help rest
 pinoccio rest get v1/troops
 ```
 
@@ -46,9 +47,13 @@ in the browser you can use the hosted version.
 
 ```html
 <script src="https://api.pinocc.io/pinoccio.js"></script>
+<script>
+ var api = pinoccioAPI();
+ // use the api
+</script>
 ```
 
-or serve the browserified (compiled) file published with the module from your web server.
+or serve the browserified (compiled) file published with the module from your own web server.
 ```
 ./node_modules/pinoccio/pinoccio-api.js
 ```

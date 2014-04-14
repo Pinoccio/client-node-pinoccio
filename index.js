@@ -67,7 +67,8 @@ module.exports = function(config){
       var uri = (config.api||'https://api.pinocc.io')+path.join('/',''+uri);
 
       var data = data||{};
-      if(this.session.token) data.token = this.session.token;
+      // allow argument supplied token.
+      if(!data.token && this.session.token) data.token = this.session.token;
 
       var opts = {};
       opts.method = (method||"GET").toUpperCase();

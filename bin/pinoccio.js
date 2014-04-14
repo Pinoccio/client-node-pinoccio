@@ -35,10 +35,27 @@ conf(function(err,config){
   }
 
   if(!argv._.length) {
-    exitmsg("missing command. please specify a command first. available commands are "+Object.keys(commands).join(','));
+    exitmsg("missing command. please specify a command first. available commands are "+Object.keys(commands).join(',')+"\n pinoccio help <command name> to get help for a command.");
   }
 
   var command = ((argv._||[])[0]||'').trim().toLowerCase();
+
+  if(command === "help"){
+    var helpcmd = ((argv._||[])[1]||'').trim().toLowerCase();
+
+    var use = "Usage:\n"
+    +"pinoccio help <command name>\n"
+    +"where command name is one of "+Object.keys(commands).join(',')+"\n";
+
+    if(!helpcmd.length) {
+      exitmsg(use)
+    } else if(!commands[helpcmd]){
+      exitmsg("could not find command\""+helpcmd+"\"\n"+use);
+    } else {
+      exitmsg(commands[helpcmd].usage||' error no use information for this command right now.');
+    }
+    return;
+  }
 
   if(!commands[command]) {
     exitmsg("unknown command. available commands are "+Object.keys(commands).join(','));
