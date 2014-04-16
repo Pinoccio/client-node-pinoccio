@@ -42,7 +42,7 @@ module.exports = function(config){
     register:function(data,cb){
       var z = this;
       // you should send email,password, firstname, lastname, username
-      this.rest({method:'post',url:'/v1/register'},data,function(err,data){
+      this.rest({method:'post',url:'/v1/register',data:data},function(err,data){
         if(err) return cb(err);
         z.session = data;
         cb(false,data);
@@ -91,8 +91,9 @@ module.exports = function(config){
       //console.log(uri,opts);
 
       var req =  hyperquest(uri,opts,function(err,res){
-        if(err) return cb(err);
-
+        if(err) {
+          return cb(err);
+        }
 
         res.on('error',function(err){
           cb(err);
