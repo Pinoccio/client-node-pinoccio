@@ -22,9 +22,10 @@ module.exports = function(config){
   var api = {
     session:config.session||{},
     login:function(email,password,cb){
-      this.rest('post','/v1/login',{email:email,password:password},function(err,data){
+      var z = this;
+      z.rest({method:'post',url:'/v1/login',data:{email:email,password:password}},function(err,data){
         if(err) return cb(err);
-        this.session = data;
+        z.session = data;
         cb(false,data);
       })
     },
@@ -32,23 +33,24 @@ module.exports = function(config){
       if(!this.session.token) return process.nextTick(function(){
         cb(false,false);
       })
-
-      this.rest('post','/v1/logout',function(err,data){
-        this.session = config.session = {};
+      var z = this;
+      this.rest({method:'post',url:'/v1/logout'},function(err,data){
+        z.session = config.session = {};
         cb(err,data);
       })
     },
     register:function(data,cb){
+      var z = this;
       // you should send email,password, firstname, lastname, username
-      this.rest('post','/v1/register',data,function(err,data){
+      this.rest({method:'post',url:'/v1/register'},data,function(err,data){
         if(err) return cb(err);
-        this.session = data;
+        z.session = data;
         cb(false,data);
       })
     },
     rest:function(method,uri,data,cb){
       // support the same rest style as browser.
-      // opts,cb
+      // opts,cb < i prefer this way
       if(typeof method == 'object' && method){
 
         cb = uri;
