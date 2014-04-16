@@ -3,7 +3,7 @@ var net = require('net');
 var connection = require('../lib/connection');
 var mdm = require('mux-demux');
 var rpc = require('rpc-stream');
-var reconnect = require('reconnect');
+var reconnect = require('reconnect-core');
 var through = require('through');
 
 
