@@ -2,6 +2,8 @@ var reconnect = require("reconnect-shoe");
 var through = require('through');
 var browserutil = require('./lib/browserutil');
 var apibase = require('./lib/api.js')
+var authpop = require("./lib/authpop.js")
+
 
 module.exports = window.pinoccioAPI = function(opts){
 
@@ -31,6 +33,10 @@ module.exports = window.pinoccioAPI = function(opts){
   api.log = function(){
     //console.log.apply(console,arguments);
   };
+
+  api.authorize = function(perms,cb){
+    return authpop(api.server,perms,cb);
+  }
 
   api.login = function(email,pass,cb){
     api.rest({url:"/v1/login",method:"post",data:{email:email,password:pass}},function(err,data){
@@ -100,6 +106,8 @@ module.exports = window.pinoccioAPI = function(opts){
     //
     return a.events(api.token);
   }
+
+  
 
   return api;
 }
