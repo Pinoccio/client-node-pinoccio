@@ -3,7 +3,8 @@ var through = require('through');
 var browserutil = require('./lib/browserutil');
 var apibase = require('./lib/api.js')
 var authpop = require("./lib/authpop.js")
-
+// created at build time.
+var version = require("./_version.js")
 
 module.exports = window.pinoccioAPI = function(opts){
 
@@ -17,6 +18,8 @@ module.exports = window.pinoccioAPI = function(opts){
   api.pending = {};
   api.id = 0;
   api.timeout = 10000;
+
+  api.version = version;
 
   opts.cookie = opts.cookie||'pinoccio_id';
 
