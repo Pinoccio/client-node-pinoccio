@@ -41,6 +41,35 @@ module.exports = window.pinoccioAPI = function(opts){
     return authpop(api.server,perms,cb);
   }
 
+  api.authorizeButtons = function(perms,cb){
+    // TODO hide if logged in.
+    var els = document.getElementsByClassName('pinoccio-authorize-button');
+    for(var i=0;i<els.length;++i){
+      if(els[i].pinoccioBound) {
+        continue;
+      }
+      els[i].pinoccioBound = 1;
+      els[i].addEventListener('click',function(ev){
+        ev.preventDefault();
+        api.authorize(perms,cb);
+      },false);
+    }
+
+    return {
+      show:function(){
+        for(var i=0;i<els.length;++i){
+          els[i].style.display = 'inline-block';
+        }
+      },
+      hide:function(){
+
+        for(var i=0;i<els.length;++i){
+          els[i].style.display = 'none';
+        }
+      }
+    }
+  }
+
   api.login = function(email,pass,cb){
     api.rest({url:"/v1/login",method:"post",data:{email:email,password:pass}},function(err,data){
       // todo untrusted host login/reg
