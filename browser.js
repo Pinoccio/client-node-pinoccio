@@ -3,6 +3,7 @@ var through = require('through');
 var browserutil = require('./lib/browserutil');
 var apibase = require('./lib/api.js')
 var authpop = require("./lib/authpop.js")
+var css = require('./lib/css.js');
 // created at build time.
 var version = require("./_version.js")
 
@@ -16,7 +17,6 @@ module.exports = window.pinoccioAPI = function(opts){
   var api = through();
   var undef;
   api.pending = {};
-  api.id = 0;
   api.timeout = 10000;
 
   api.version = version;
@@ -27,7 +27,6 @@ module.exports = window.pinoccioAPI = function(opts){
   api.server = opts.server||opts.api||browserutil.findAPIScript()||"https://api.pinocc.io";
   api.account = false;
 
-
   var recon = reconnect().connect(api.server+'/shoe');
   var a = apibase(opts,recon);
 
@@ -36,39 +35,6 @@ module.exports = window.pinoccioAPI = function(opts){
   api.log = function(){
     //console.log.apply(console,arguments);
   };
-
-  api.authorize = function(perms,cb){
-    return authpop(api.server,perms,cb);
-  }
-
-  api.authorizeButtons = function(perms,cb){
-    // TODO hide if logged in.
-    var els = document.getElementsByClassName('pinoccio-authorize-button');
-    for(var i=0;i<els.length;++i){
-      if(els[i].pinoccioBound) {
-        continue;
-      }
-      els[i].pinoccioBound = 1;
-      els[i].addEventListener('click',function(ev){
-        ev.preventDefault();
-        api.authorize(perms,cb);
-      },false);
-    }
-
-    return {
-      show:function(){
-        for(var i=0;i<els.length;++i){
-          els[i].style.display = 'inline-block';
-        }
-      },
-      hide:function(){
-
-        for(var i=0;i<els.length;++i){
-          els[i].style.display = 'none';
-        }
-      }
-    }
-  }
 
   api.login = function(email,pass,cb){
     api.rest({url:"/v1/login",method:"post",data:{email:email,password:pass}},function(err,data){
@@ -127,19 +93,88 @@ module.exports = window.pinoccioAPI = function(opts){
   // stats are a time series of report data
   // if multiple reports are provided they
   api.stats = function(obj){
-    //
     return a.stats(api.token,obj);
   }
 
-  // get the raw events stream.
-  // to subscribe to a troops raw events you must either execute a command on a scout in that troop or watch the troop
-  // api.rest({url:"/v1/{troopid}",method:"watch"},console.log.bind(console))
-  api.events = function(){
-    //
-    return a.events(api.token);
+  // api.events is depricated. this was very implementation dependent and did not offer predictable or maintainable output streams.
+  // it was never documented either.
+
+  // login buttons. protect the users passwords by not having them enter them into your web apps!
+  var authButtonStyled = false;
+  api.loginButtons = function(perms,cb){
+    if(!authButtonStyled){
+      authButtonStyled = true;
+      css(css.insertStyle().sheet,{
+        ".pinoccio-login-button":{
+          height:"20px;",
+          "font-size":"15px;",
+          "border-radius":"4px;",
+          "background-color":"#007295;",
+          color:"#fff;",
+          "text-decoration":"none",
+          "font-family":"Arial, Helvetica, sans-serif",
+          "display":"inline-block;",
+          "padding":"3px 8px 8px 4px;"
+        },
+        ".pinoccio-login-button:hover":{
+          "background-color":"#008CBA"
+        },
+        ".pinoccio-login-button img":{
+          height:"20px;",
+          position:"relative;",
+          top:"3px;"
+        }
+      });
+    }
+
+    var els = document.getElementsByClassName('pinoccio-login-button');
+    for(var i=0;i<els.length;++i){
+      if(els[i].pinoccioBound) {
+        continue;
+      }
+      els[i].pinoccioBound = 1;
+      els[i].addEventListener('click',function(ev){
+        ev.preventDefault();
+        api.authorize(perms,cb);
+      },false);
+      els[i].innerHTML = "<img src='https://api.pinocc.io/static/pinoccio-face.png' alt=''> Login with pinoccio";
+    }
+
+    var control = {
+      show:function(){
+        for(var i=0;i<els.length;++i){
+          els[i].style.display = 'inline-block';
+        }
+      },
+      hide:function(){
+
+        for(var i=0;i<els.length;++i){
+          els[i].style.display = 'none';
+        }
+      }
+    }
+    var origcb = cb;
+    cb = function(err,data){
+      var ret = origcb(err,data);
+      if((ret == undef || ret === true) && !err) control.hide();
+    };
+
+    return control;
   }
 
-  
+  api.authorize = function(perms,cb){
+    return authpop(api.server,perms,function(err,data){
+      if(err) return cb(err);
+      api.token = data.token;
+      browserutil.setCookie(opts.cookie,api.token);
+      // call account serv ice so it calls back with the same value as login.
+      api.rest({url:'/v1/account'},function(err,sessionData){
+        sessionData.token = api.token;
+        sessionData.new = data.new;// is this a brand new token?
+        cb(err,sessionData);
+      })
+    });
+  }
 
   return api;
 }
