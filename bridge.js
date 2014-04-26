@@ -26,7 +26,7 @@ function writer(buf)
   if(!outQ.length || outBusy) return;
 
   // new packet
-  console.log("  42",outQ[0].length);
+//  console.log("  42",outQ[0].length);
   serial.write(new Buffer("2a","hex"));
 
   outBusy = true;
@@ -40,14 +40,14 @@ function writeBlock()
   // all done
   if(outQ[0].length == 0)
   {
-    console.log("  done");
+//    console.log("  done");
     outQ.shift();
     serial.write(new Buffer("00","hex"));
     outBusy = false;
     return writer();
   }
 
-  console.log("  block",outQ[0].length);
+//  console.log("  block",outQ[0].length);
   one = new Buffer(1);
   one[0] = (outQ[0].length > 32)? 32 : outQ[0].length;
   serial.write(one);
