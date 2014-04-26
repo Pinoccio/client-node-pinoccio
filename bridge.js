@@ -17,18 +17,55 @@ function die(err)
   process.exit(1);
 }
 
+// we have to write small blocks to not fill up the device buffer
+var outQ = [];
+var outBusy = false;
+function writer(buf)
+{
+  if(buf) outQ.push(buf);
+  if(!outQ.length || outBusy) return;
+
+  // new packet
+  console.log("  42",outQ[0].length);
+  serial.write(new Buffer("2a","hex"));
+
+  outBusy = true;
+  writeBlock();
+}
+
+function writeBlock()
+{
+  if(!outBusy) return;
+
+  // all done
+  if(outQ[0].length == 0)
+  {
+    console.log("  done");
+    outQ.shift();
+    serial.write(new Buffer("00","hex"));
+    outBusy = false;
+    return writer();
+  }
+
+  console.log("  block",outQ[0].length);
+  one = new Buffer(1);
+  one[0] = (outQ[0].length > 32)? 32 : outQ[0].length;
+  serial.write(one);
+  serial.write(outQ[0].slice(0,32));
+  outQ[0] = outQ[0].slice(32);
+}
+
 function packet2serial(msg)
 {
   if(!msg.length) return;
-  var header = new Buffer(3);
-  header[0] = 42;
-  header[1] = (msg.length-1) / 256;
-  header[2] = msg.length - (header[1] * 256);
-  console.log("  OUT",header[1],header[2],msg.length,msg.toString("hex"));
-  serial.write(Buffer.concat([header,msg]));
+  writer(msg);
 }
 
+var dedup = "";
 self.deliver("serial",function(to,msg){
+  // serial is reliable but slow so ignore identical resent packets
+  if(msg.toString() == dedup) return;
+  dedup = msg.toString();
   packet2serial(msg);
 });
 
@@ -48,7 +85,7 @@ serialport.list(function (err, ports) {
 
   serial.on('open',function(err){
     if(err) die(err);
-    process.stdin.pipe(serial);
+//    process.stdin.pipe(serial);
     // send ping hello
     setTimeout(function(){
       packet2serial(self.pencode(self.ping()));
@@ -64,9 +101,9 @@ serialport.list(function (err, ports) {
   });
 });
 
-function doLine()
+function doLine(line)
 {
-  // line based handling
+  if(line.length > 1) process.stdout.write(line);
 }
 
 function doPacket(raw)
@@ -81,8 +118,8 @@ function doPacket(raw)
 }
 
 var bufS = new Buffer(0);
-var modeS = 0;
 var lenS;
+var modeS = 0;
 function serialIn(c)
 {
   switch(modeS) {
@@ -93,7 +130,6 @@ function serialIn(c)
       modeS = 1;
     case 1: // normal serial stuff
       if(c[0] == 13) return;
-      process.stdout.write(c);
       bufS = Buffer.concat([bufS,c]);
       if(c[0] != 10) return;
       doLine(bufS);
@@ -104,9 +140,11 @@ function serialIn(c)
       lenS = 256 * c[0];
       modeS = 3;
       break;
-    case 3: // read big len
+    case 3: // read little len
       lenS += c[0];
-      modeS = 4;
+      if(lenS == 0) writeBlock();
+      // read packet if any
+      modeS = (lenS) ? 4 : 0;
       break;
     case 4: // read packet bytes
       bufS = Buffer.concat([bufS,c]);
@@ -115,6 +153,7 @@ function serialIn(c)
       doPacket(bufS);
       bufS = new Buffer(0);
       modeS = 0;
+      break;
   } 
 }
 
