@@ -157,7 +157,7 @@ module.exports = function(config){
         _s.on('error',function(error){
           s.emit('error',error);
         })
-        _s.pipe(split()),pipe(s);
+        _s.pipe(split()).pipe(s);
         s.on('end',function(){
           _s.socket.end();
         })
