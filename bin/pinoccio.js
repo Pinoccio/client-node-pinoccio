@@ -13,6 +13,7 @@ var commands = {
   "token":require('../lib/commands/token'),
   "register":require('../lib/commands/register'),
   "rest":require('../lib/commands/rest'),
+  "cmd":require('../lib/commands/cmd'),
   "config":require('../lib/commands/config'),
   "serial":require('../lib/commands/serial'),
   //"provision":require('../lib/commands/provision') //<-- not ready yet
