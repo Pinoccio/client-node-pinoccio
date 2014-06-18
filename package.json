@@ -34,7 +34,6 @@
     "hyperquest": "~0.2.0",
     "xtend": "~2.1.1",
     "concat-stream": "~1.2.1",
-    "serialport": "~1.4.0",
     "split": "~0.2.10",
     "binary-split": "~0.1.1",
     "through": "~2.3.4",
@@ -47,8 +46,10 @@
     "cookie": "~0.1.0",
     "repipe": "~0.0.2",
     "backoff": "~2.3.0",
-    "shoe": "0.0.15",
-    "reconnect-shoe": "0.0.3"
+    "shoe": "~0.0.15",
+    "reconnect-shoe": "~0.0.3",
+    "pinoccio-serial":"~0.0.0",
+    "pinoccio-bridge":"~0.0.0"
   },
   "devDependencies": {
     "tape": "~2.3.2",
