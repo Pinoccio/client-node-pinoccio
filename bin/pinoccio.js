@@ -16,6 +16,7 @@ var commands = {
   "config":require('../lib/commands/config'),
   "serial":require('../lib/commands/serial'),
   "bridge":require('../lib/commands/bridge'),
+  "repl":require('../lib/commands/repl'),
   //"provision":require('../lib/commands/provision') //<-- not ready yet
   //<-- add any serial connected scouts to troops
   // are you a lead scout?
