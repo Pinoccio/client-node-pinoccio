@@ -1,6 +1,6 @@
 {
   "name": "pinoccio",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "pinoccio api client. http://pinocc.io",
   "main": "index.js",
   "browser": "browser.js",
@@ -48,7 +48,7 @@
     "backoff": "~2.3.0",
     "shoe": "~0.0.15",
     "reconnect-shoe": "~0.0.3",
-    "pinoccio-serial": "~0.0.0",
+    "pinoccio-serial": "~0.0.2",
     "pinoccio-bridge": "~0.0.3",
     "pretty-date": "^0.2.0"
   },
