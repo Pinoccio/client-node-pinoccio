@@ -20,6 +20,7 @@ var commands = {
   "troops":require('../lib/commands/troops'),
   "add":require('../lib/commands/add-scout.js'),
   "ota":require('../lib/commands/ota.js'),
+  "batch-flash":require('../lib/commands/batch-flash')
   //"provision":require('../lib/commands/provision') //<-- not ready yet
   //<-- add any serial connected scouts to troops
   // are you a lead scout?
