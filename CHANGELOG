@@ -5,6 +5,9 @@
 bridge mode enhancements
 updates to the pinoccio bridge command that make it usable as an unattended service in production.
 
+pinoccio bridge
+---------------
+
 - observes serial device list to find a scout to bridge
 - runs bridge connection in a child process to ensure stability
 - child process drops privileges if run as root so as not to expose undue security risk
@@ -14,4 +17,7 @@ updates to the pinoccio bridge command that make it usable as an unattended serv
 - will only bridge with the scout that is specified by the --port option or the first scout selected if more scouts are plugged in.
 - supports selecting another bridge scout by watching for ctrl+c
 
+pinoccio serial
+---------------
 
+- ignore empty lines instead of sending them to api just to get an error back later.
