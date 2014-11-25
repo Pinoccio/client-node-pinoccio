@@ -101,5 +101,7 @@ function exitmsg(msg){
 process.on('exit',function(){
   loady.restore();
 }).on('SIGINT',function(){
-  if(!loady.active) process.exit();
+  if(!process._pinoccio_ignore_int){
+    if(!loady.active) process.exit();
+  }
 })
