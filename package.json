@@ -1,6 +1,6 @@
 {
   "name": "pinoccio",
-  "version": "0.1.33",
+  "version": "0.1.34",
   "description": "pinoccio api client. http://pinocc.io",
   "main": "index.js",
   "browser": "browser.js",
@@ -25,7 +25,7 @@
     "api",
     "mesh"
   ],
-  "author": "Ryan day",
+  "author": "Ryan Day",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Pinoccio/client-node-pinoccio/issues"
@@ -52,7 +52,7 @@
     "shoe": "~0.0.15",
     "shuffle-array": "0.0.2",
     "split": "~0.2.10",
-    "stk500": "git://github.com/Pinoccio/js-stk500.git",
+    "stk500-v2": "~1.0.0",
     "through": "~2.3.4",
     "watch-serial": "~0.0.5",
     "xtend": "~2.1.1"
