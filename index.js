@@ -59,8 +59,6 @@ module.exports = function(config){
         method = method.method || 'GET'
       }
 
-      //console.log('rest',arguments);
-
       if(typeof data === 'function'){
         cb = data;
         data = {};
@@ -88,8 +86,6 @@ module.exports = function(config){
         opts.headers['content-length'] = data.length;
       }
 
-      //console.log(uri,opts);
-
       var req =  hyperquest(uri,opts,function(err,res){
         if(err) {
           return cb(err);
@@ -104,7 +100,6 @@ module.exports = function(config){
           cb(false,res);// return response stream.
         } else {
           res.pipe(concat(function(data){
-            //console.log(data.toString());
             var parsed = json(data)||{};
             cb(parsed.error,parsed.data,data);
           }))
@@ -112,34 +107,96 @@ module.exports = function(config){
       });
 
       if(opts.method != 'GET' && opts.method != 'DELETE') {
-        //console.log(data);
         req.write(data);
         req.end();
       }
     },
     sync:function(opts){
-      var s = through(function(data){
-        try{
-          this.queue(JSON.parse(data));
-        } catch(e) {
-          this.emit('error',e);
+      opts = opts||{};
+
+      var z = this;
+      var start = opts.start||0;      
+      var repiped = through();
+
+      var t = Date.now();
+      var begin = t;
+
+      repipe(repiped,function(err,last,done){
+
+        var elap = Date.now()-t;
+        t = Date.now();
+        repiped.emit('log','reconnect',err,last,opts,elap);
+
+        if(last) {
+          opts.start = start+0.001;// get the next event rather than the last event you already got.
+
+          // because sending start triggers stale mode. 
+          // if we did not intend on getting stale events, 
+          // we may get events that happend after the last start time when we reconnect that are not new.
+          // we will use the local begin timestamp to filter stale messages because the server timestamp at the start of the process is not available.
+          // this is not perfect. but as long as the drift is not greater than the streams life it will be accurate.
+          //
+          if(!opts.stale){
+            // this case is only true if there are no new events generated when the previous stream was open.
+            if(opts.start < begin) {
+              // override start with the time i started this process.
+              start = opts.start = begin;
+            }
+          }
         }
+        done(false,make(opts));
       });
-      
-      this.rest({url:"/v1/sync",data:opts},function(err,_s){
-        if(err) return s.emit('error',err);
-        if(!_s) return s.emit('error',new Error('no stream returned'));
-        _s.on('error',function(error){
-          s.emit('error',error);
-        })
-        _s.pipe(split()).pipe(s);
 
+
+      function make(opts){
+        var s = through(function(data){
+
+          // catch empty strings throwing json parse errors.
+          if(!(data||'').trim().length) return repiped.emit('log','error','empty string event ignored!');
+
+          try{
+            var o = JSON.parse(data);
+            if(o.data){
+              
+              var _t = (o.data.value?o.data.value.time||o.data.value._t:o.data.time);
+              if( _t && start < +_t) start = +_t;
+              // filter data events! this is an error in the api right now. it doesnt start from start correctly.
+              if(opts.start) {
+                if(_t < opts.start) return;
+              }
+            }
+
+            this.queue(o);
+
+          } catch(e) {
+            e.data = data;
+            this.emit('error',e);
+          }
+        });
+
+        // make end an error so repipe knows to reconnect! 
         s.on('end',function(){
-          _s.socket.end();
+          this.emit('error','dont end bro!');
         })
-      });
+ 
+        z.rest({url:"/v1/sync",data:opts},function(err,_s){
+          if(err) return s.emit('error',err);
+          if(!_s) return s.emit('error',new Error('no stream returned'));
+          _s.on('error',function(error){
+            s.emit('error',error);
+          });
 
-      return s;
+          _s.pipe(split()).pipe(s);
+
+          s.on('end',function(){
+            _s.socket.end();
+          });
+        });
+
+        return s;
+      }
+
+      return repiped;
     },
     stats:function(opts){
 
