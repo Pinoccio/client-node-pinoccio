@@ -1,6 +1,6 @@
 {
   "name": "pinoccio",
-  "version": "0.1.37",
+  "version": "0.1.38",
   "description": "pinoccio api client. http://pinocc.io",
   "main": "index.js",
   "browser": "browser.js",
