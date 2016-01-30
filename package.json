@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "tape": "~2.3.2",
-    "browserify": "~3.18.0",
+    "browserify": "~13.0.0",
     "reconnect-core": "~0.0.1"
   }
 }
