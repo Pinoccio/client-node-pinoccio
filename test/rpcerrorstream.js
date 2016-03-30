@@ -63,9 +63,9 @@ test("can connect",function(t){
     });
 
     stop = true;
-    setImmediate(function(){
+    setTimeout(function(){
       _con.destroy();
-    });
+    }, 500);
   });
 });
 
